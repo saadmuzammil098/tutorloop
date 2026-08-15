@@ -8,6 +8,12 @@ on:
 jobs:
   test-task-1:
     runs-on: ubuntu-latest
+    # Each task lives on its own PR branch off main and is never merged
+    # until the user merges it (hard PR-workflow rule), so a later task's
+    # branch, based on main, won't contain earlier tasks' folders yet.
+    # Skip cleanly instead of failing CI for a task this branch doesn't
+    # touch.
+    if: hashFiles('task-1/**') != ''
     defaults:
       run:
         working-directory: task-1
@@ -26,6 +32,7 @@ jobs:
 
   test-task-2:
     runs-on: ubuntu-latest
+    if: hashFiles('task-2/**') != ''
     defaults:
       run:
         working-directory: task-2
