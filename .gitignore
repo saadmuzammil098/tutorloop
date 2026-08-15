@@ -11,9 +11,8 @@ task-5/langfuse-data/
 task-5/.env
 task-6/langfuse-data/
 task-6/.env
-task-8/.terraform/
-task-8/*.tfstate
-task-8/*.tfstate.backup
-task-8/.terraform.lock.hcl
+task-8/**/.terraform/
+task-8/**/*.tfstate
+task-8/**/*.tfstate.backup
 *.log
 task-2/tutorloop_state.sqlite

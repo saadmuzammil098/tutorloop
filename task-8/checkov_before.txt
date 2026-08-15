@@ -1,0 +1,117 @@
+
+       _               _
+   ___| |__   ___  ___| | _______   __
+  / __| '_ \ / _ \/ __| |/ / _ \ \ / /
+ | (__| | | |  __/ (__|   < (_) \ V /
+  \___|_| |_|\___|\___|_|\_\___/ \_/
+
+By Prisma Cloud | version: 3.3.11 
+
+terraform scan results:
+
+Passed checks: 10, Failed checks: 16, Skipped checks: 0
+
+Check: CKV_AWS_93: "Ensure S3 bucket policy does not lockout all but root user. (Prevent lockouts needing root account fixes)"
+	PASSED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-24
+Check: CKV_AWS_274: "Disallow IAM roles, users, and groups from using the AWS AdministratorAccess policy"
+	PASSED for resource: aws_iam_role.session_uploader
+	File: /main.tf:13-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-274
+Check: CKV_AWS_393: "Ensure AWS GitHub Actions OIDC authorization policies only allow safe claims and claim order on IAM role"
+	PASSED for resource: aws_iam_role.session_uploader
+	File: /main.tf:13-24
+Check: CKV_AWS_61: "Ensure AWS IAM policy does not allow assume role permission across all services"
+	PASSED for resource: aws_iam_role.session_uploader
+	File: /main.tf:13-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-iam-45
+Check: CKV_AWS_60: "Ensure IAM role allows only specific services or principals to assume it"
+	PASSED for resource: aws_iam_role.session_uploader
+	File: /main.tf:13-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-iam-44
+Check: CKV_AWS_41: "Ensure no hard coded AWS access key and secret key exists in provider"
+	PASSED for resource: aws.default
+	File: /provider.tf:15-28
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/secrets-policies/bc-aws-secrets-5
+Check: CKV2_AWS_56: "Ensure AWS Managed IAMFullAccess IAM policy is not used."
+	PASSED for resource: aws_iam_role.session_uploader
+	File: /main.tf:13-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-2-56
+Check: CKV_AWS_20: "S3 Bucket has an ACL defined which allows public READ access."
+	PASSED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-1-acl-read-permissions-everyone
+Check: CKV_AWS_57: "S3 Bucket has an ACL defined which allows public WRITE access."
+	PASSED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-2-acl-write-permissions-everyone
+Check: CKV_AWS_19: "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+	PASSED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-14-data-encrypted-at-rest
+Check: CKV_AWS_288: "Ensure IAM policies does not allow data exfiltration"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-288
+Check: CKV_AWS_290: "Ensure IAM policies does not allow write access without constraints"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-290
+Check: CKV_AWS_287: "Ensure IAM policies does not allow credentials exposure"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-287
+Check: CKV_AWS_63: "Ensure no IAM policies documents allow "*" as a statement's actions"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/iam-48
+Check: CKV_AWS_289: "Ensure IAM policies does not allow permissions management / resource exposure without constraints"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-289
+Check: CKV_AWS_62: "Ensure IAM policies that allow full "*-*" administrative privileges are not created"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-iam-45
+Check: CKV_AWS_355: "Ensure no IAM policies documents allow "*" as a statement's resource for restrictable actions"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-355
+Check: CKV_AWS_286: "Ensure IAM policies does not allow privilege escalation"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-286
+Check: CKV2_AWS_62: "Ensure S3 buckets should have event notifications enabled"
+	FAILED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-62
+Check: CKV2_AWS_6: "Ensure that S3 bucket has a Public Access block"
+	FAILED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/s3-bucket-should-have-public-access-blocks-defaults-to-false-if-the-public-access-block-is-not-attached
+Check: CKV2_AWS_61: "Ensure that an S3 bucket has a lifecycle configuration"
+	FAILED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-61
+Check: CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
+	FAILED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-13-enable-logging
+Check: CKV_AWS_145: "Ensure that S3 buckets are encrypted with KMS by default"
+	FAILED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-buckets-are-encrypted-with-kms-by-default
+Check: CKV_AWS_144: "Ensure that S3 bucket has cross-region replication enabled"
+	FAILED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-bucket-has-cross-region-replication-enabled
+Check: CKV_AWS_21: "Ensure all data stored in the S3 bucket have versioning enabled"
+	FAILED for resource: aws_s3_bucket.session_transcripts
+	File: /main.tf:9-11
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning
+Check: CKV2_AWS_40: "Ensure AWS IAM policy does not allow full IAM privileges"
+	FAILED for resource: aws_iam_role_policy.session_uploader_policy
+	File: /main.tf:26-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-2-40
+
