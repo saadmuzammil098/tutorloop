@@ -24,6 +24,23 @@ jobs:
         # tool-error recovery logic directly.
         run: python -m pytest tests -v
 
+  test-task-2:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: task-2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - run: pip install -r ../requirements.txt
+      - name: LangGraph routing, checkpointer, and human-in-the-loop tests
+        # Fast, offline: chat_fn is scripted, MemorySaver is used instead
+        # of the SQLite checkpointer, no live Ollama server needed.
+        run: python -m pytest tests -v
+
   readme-diagrams:
     runs-on: ubuntu-latest
     steps:
