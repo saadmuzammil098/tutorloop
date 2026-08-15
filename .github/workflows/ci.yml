@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test-task-1:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: task-1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - run: pip install -r ../requirements.txt
+      - name: ReAct loop, tools, and error-recovery tests
+        # Fast, offline: Ollama calls are monkeypatched, no live model
+        # server needed. Exercises the tool router, step-limit, and
+        # tool-error recovery logic directly.
+        run: python -m pytest tests -v
+
+  readme-diagrams:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/validate_mermaid.py
