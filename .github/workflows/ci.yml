@@ -8,44 +8,55 @@ on:
 jobs:
   test-task-1:
     runs-on: ubuntu-latest
-    # Each task lives on its own PR branch off main and is never merged
-    # until the user merges it (hard PR-workflow rule), so a later task's
-    # branch, based on main, won't contain earlier tasks' folders yet.
-    # Skip cleanly instead of failing CI for a task this branch doesn't
-    # touch.
-    if: hashFiles('task-1/**') != ''
-    defaults:
-      run:
-        working-directory: task-1
     steps:
       - uses: actions/checkout@v4
+      # Task branches are based off main and never merged (hard PR-workflow
+      # rule), so a later task's branch won't contain earlier unmerged
+      # tasks' folders yet. Check for the folder and skip the remaining
+      # steps cleanly instead of failing CI for a task this branch doesn't
+      # touch (a job-level `if` can't do this: it evaluates before
+      # actions/checkout runs, so the folder never exists yet at that point).
+      - name: Check task-1 exists on this branch
+        id: check
+        run: echo "exists=$([ -d task-1 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@v5
+        if: steps.check.outputs.exists == 'true'
         with:
           python-version: "3.12"
           cache: "pip"
-      - run: pip install -r ../requirements.txt
+      - name: Install deps
+        if: steps.check.outputs.exists == 'true'
+        working-directory: task-1
+        run: pip install -r ../requirements.txt
       - name: ReAct loop, tools, and error-recovery tests
+        if: steps.check.outputs.exists == 'true'
         # Fast, offline: Ollama calls are monkeypatched, no live model
         # server needed. Exercises the tool router, step-limit, and
         # tool-error recovery logic directly.
+        working-directory: task-1
         run: python -m pytest tests -v
 
   test-task-2:
     runs-on: ubuntu-latest
-    if: hashFiles('task-2/**') != ''
-    defaults:
-      run:
-        working-directory: task-2
     steps:
       - uses: actions/checkout@v4
+      - name: Check task-2 exists on this branch
+        id: check
+        run: echo "exists=$([ -d task-2 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@v5
+        if: steps.check.outputs.exists == 'true'
         with:
           python-version: "3.12"
           cache: "pip"
-      - run: pip install -r ../requirements.txt
+      - name: Install deps
+        if: steps.check.outputs.exists == 'true'
+        working-directory: task-2
+        run: pip install -r ../requirements.txt
       - name: LangGraph routing, checkpointer, and human-in-the-loop tests
+        if: steps.check.outputs.exists == 'true'
         # Fast, offline: chat_fn is scripted, MemorySaver is used instead
         # of the SQLite checkpointer, no live Ollama server needed.
+        working-directory: task-2
         run: python -m pytest tests -v
 
   readme-diagrams:
