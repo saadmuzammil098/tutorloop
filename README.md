@@ -35,9 +35,9 @@ flowchart TB
     end
 
     subgraph T2["Task 2: LangGraph + human-in-the-loop"]
-        student2(("student\nquestion")) --> graph["LangGraph\nstate machine"]
-        graph --> checkpoint[("SQLite\ncheckpointer")]
-        graph --> hitl{"progress note\ndrafted?"}
+        student2(("student\nquestion")) --> fsm["LangGraph\nstate machine"]
+        fsm --> checkpoint[("SQLite\ncheckpointer")]
+        fsm --> hitl{"progress note\ndrafted?"}
         hitl -- yes --> pause(("pause,\nawait teacher"))
         pause --> approve(("teacher\napproves")) --> resume["resume from\nsaved state"]
     end
