@@ -53,7 +53,7 @@ flowchart TB
 
     subgraph T4["Task 4: memory + RAG"]
         q4(("student\nquestion")) --> mem[("student memory\nSQLite")]
-        q4 --> rag["Chroma retrieval\n(sentence-transformers)"]
+        q4 --> rag["Chroma retrieval\n(Ollama nomic-embed-text)"]
         mem --> ground["grounded,\npersonalized answer"]
         rag --> ground
     end
@@ -86,7 +86,7 @@ flowchart TB
 | 1 | [`task-1/`](./task-1) | Hand-rolled ReAct loop, no framework: curriculum-lookup, calculator, and practice-problem-generator tools over three OpenStax Prealgebra chapters, with a step limit and tool-error recovery |
 | 2 | [`task-2/`](./task-2) | Same agent rebuilt as a LangGraph state machine with a SQLite checkpointer and a human-in-the-loop pause before a drafted teacher progress note "sends" |
 | 3 | [`task-3/`](./task-3) | Planner/content/quiz/coordinator multi-agent system that turns a unit request into a coherent mini-lesson and aligned quiz, plus a written single-agent-vs-multi-agent analysis |
-| 4 | [`task-4/`](./task-4) | Long-term student memory (SQLite) plus a proper Chroma + sentence-transformers RAG index over the OpenStax chapters, grounding new explanations and recalling past weak topics |
+| 4 | [`task-4/`](./task-4) | Long-term student memory (SQLite) plus a proper Chroma + Ollama-embeddings RAG index over the OpenStax chapters, grounding new explanations and recalling past weak topics |
 | 5 | [`task-5/`](./task-5) | Full tracing via self-hosted Langfuse, trajectory/tool-call/task-success evaluation, and a deliberately-broken session used to demonstrate root-causing a failure from its trace |
 | 6 | [`task-6/`](./task-6) | OpenTelemetry instrumentation feeding the same self-hosted Langfuse, latency/cost/error-rate dashboards, and per-session thumbs-up/down feedback capture |
 | 7 | [`task-7/`](./task-7) | Online eval scoring of live sessions, a feedback-to-dataset loop, and shadow-testing a candidate tutoring prompt before it reaches a real session |
@@ -102,8 +102,12 @@ flowchart TB
   `GROQ_API_KEY` is not set in this environment, so Groq is wired
   defensively (same pattern as GridScribe/RxGround) but not exercised live.
 - **LangGraph**, task 2-3, durable agent state machines.
-- **Chroma + sentence-transformers** (`all-MiniLM-L6-v2`), task 4, RAG over
-  the OpenStax index.
+- **Chroma + Ollama embeddings** (`nomic-embed-text`), task 4, RAG over the
+  OpenStax index. Originally sentence-transformers' `all-MiniLM-L6-v2` from
+  the HF Hub, swapped to a local Ollama embedding model mid-build after the
+  HF CDN proved severely bandwidth-throttled in this environment (see
+  `task-4/README.md`'s "Why Chroma + Ollama embeddings" section for the
+  measured numbers).
 - **Self-hosted Langfuse** (docker-compose), tasks 5-6, since no Langfuse
   Cloud/LangSmith credentials exist here, same tradeoff FleetPulse
   documents for self-hosting Prometheus/Grafana instead of a paid cloud
