@@ -1,0 +1,18 @@
+{
+  "chapter": "Solving Linear Equations",
+  "source": "Adapted from OpenStax Prealgebra 2e, Chapter 2 (CC BY 4.0), openstax.org",
+  "sections": [
+    {
+      "title": "The Subtraction and Addition Properties of Equality",
+      "text": "An equation is a statement that two expressions are equal, like x + 5 = 9. Solving an equation means finding the value of the variable that makes the statement true. The Subtraction Property of Equality says that if you subtract the same number from both sides of an equation, the two sides remain equal. The Addition Property of Equality says the same for adding the same number to both sides. Example: to solve x + 5 = 9, subtract 5 from both sides to get x = 4."
+    },
+    {
+      "title": "The Division and Multiplication Properties of Equality",
+      "text": "The Division Property of Equality says that if you divide both sides of an equation by the same nonzero number, the two sides remain equal. The Multiplication Property of Equality says the same for multiplying. Example: to solve 4x = 20, divide both sides by 4 to get x = 5."
+    },
+    {
+      "title": "Solve Equations with Variables and Constants on Both Sides",
+      "text": "To solve an equation with variables on both sides, first collect the variable terms on one side and the constant terms on the other, using the addition/subtraction properties, then isolate the variable using the division/multiplication properties. Example: 3x + 2 = x + 10. Subtract x from both sides: 2x + 2 = 10. Subtract 2 from both sides: 2x = 8. Divide both sides by 2: x = 4."
+    }
+  ]
+}
