@@ -11,6 +11,7 @@ task-5/langfuse-data/
 task-5/.env
 task-6/langfuse-data/
 task-6/.env
+task-7/hard_examples.jsonl
 task-8/.terraform/
 task-8/*.tfstate
 task-8/*.tfstate.backup
