@@ -14,5 +14,6 @@ task-6/.env
 task-8/**/.terraform/
 task-8/**/*.tfstate
 task-8/**/*.tfstate.backup
+task-8/**/tfplan
 *.log
 task-2/tutorloop_state.sqlite
