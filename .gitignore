@@ -5,10 +5,12 @@ __pycache__/
 .dvc/cache
 .dvc/tmp
 task-4/chroma_db/
+task-4/*.sqlite
 task-2/state/
 task-2/*.sqlite
 task-5/langfuse-data/
 task-5/.env
+task-5/broken_trace_id.txt
 task-6/langfuse-data/
 task-6/.env
 task-8/.terraform/
