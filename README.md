@@ -75,7 +75,7 @@ flowchart TB
         attack(("jailbreak\nattempts")) --> guard["output filter +\nsystem-prompt guard"]
         tf["over-broad\nTerraform IAM role"] --> scan["checkov scan"]
         scan --> tighten["tightened role"]
-        tighten --> floci[("Floci\nAccessDenied")]
+        tighten --> floci[("Floci: SimulatePrincipalPolicy\n(live AccessDenied not\nenforced, community edition)")]
     end
 ```
 
@@ -90,7 +90,7 @@ flowchart TB
 | 5 | [`task-5/`](./task-5) | Full tracing via self-hosted Langfuse, trajectory/tool-call/task-success evaluation, and a deliberately-broken session used to demonstrate root-causing a failure from its trace |
 | 6 | [`task-6/`](./task-6) | OpenTelemetry instrumentation feeding the same self-hosted Langfuse, latency/cost/error-rate dashboards, and per-session thumbs-up/down feedback capture |
 | 7 | [`task-7/`](./task-7) | Online eval scoring of live sessions, a feedback-to-dataset loop, and shadow-testing a candidate tutoring prompt before it reaches a real session |
-| 8 | [`task-8/`](./task-8) | Red-teaming the "just give me the answer" jailbreak plus general prompt injection/output filtering, then a Terraform IAM least-privilege exercise against Floci: over-broad role, checkov scan, tighten, confirm `AccessDenied` |
+| 8 | [`task-8/`](./task-8) | Red-teaming the "just give me the answer" jailbreak plus general prompt injection/output filtering, then a Terraform IAM least-privilege exercise against Floci: over-broad role, checkov scan, tighten, verify via `iam:SimulatePrincipalPolicy` (Floci's community edition doesn't enforce IAM on live calls, a documented fidelity gap) |
 
 ## Tech stack
 
