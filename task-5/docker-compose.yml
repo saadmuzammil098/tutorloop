@@ -1,0 +1,53 @@
+# Self-hosted Langfuse, postgres-only v2 line (not v3's
+# clickhouse+minio+redis+worker stack): v3's additional images
+# (clickhouse-server, minio, a separate worker) added a lot of download
+# weight against a Docker Hub CDN that was measurably unreliable in this
+# environment (see task-5/README.md "A real infra swap mid-task" for the
+# numbers), and v2's single postgres-backed image is more than sufficient
+# for what this task actually needs: tracing + trajectory/tool-call/
+# task-success scoring for a handful of eval runs, not production-scale
+# trace volume. Pulled from ghcr.io (GitHub Container Registry) rather
+# than docker.io directly, since docker.io's blob CDN
+# (production.cloudfront.docker.com) was hitting repeated TLS handshake
+# timeouts and truncated reads in this environment while ghcr.io pulled
+# the identical image cleanly. No Langfuse Cloud/LangSmith credentials
+# exist in this environment, same tradeoff FleetPulse documents for
+# self-hosting Prometheus/Grafana instead of a paid cloud service.
+#
+# LANGFUSE_INIT_* env vars bootstrap a fixed org/project/user/API-keypair
+# on first boot (Langfuse's own documented non-interactive setup path), so
+# eval.py can authenticate with a fixed key pair from `.env` instead of
+# requiring a manual UI signup step.
+name: tutorloop-langfuse
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: langfuse
+      POSTGRES_PASSWORD: langfuse
+      POSTGRES_DB: langfuse
+    volumes:
+      - langfuse-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langfuse"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  langfuse:
+    image: ghcr.io/langfuse/langfuse:2
+    depends_on:
+      postgres: {condition: service_healthy}
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://langfuse:langfuse@postgres:5432/langfuse
+      NEXTAUTH_URL: http://localhost:3000
+      TELEMETRY_ENABLED: "false"
+    restart: unless-stopped
+
+volumes:
+  langfuse-postgres-data:
