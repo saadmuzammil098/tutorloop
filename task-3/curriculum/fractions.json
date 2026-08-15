@@ -1,0 +1,18 @@
+{
+  "chapter": "Fractions",
+  "source": "Adapted from OpenStax Prealgebra 2e, Chapter 4 (CC BY 4.0), openstax.org",
+  "sections": [
+    {
+      "title": "Visualize Fractions",
+      "text": "A fraction is written a/b where a is the numerator and b is the denominator, and b cannot be zero. The fraction a/b means a parts out of b equal parts of a whole. A fraction is in simplest form when its numerator and denominator have no common factors other than 1."
+    },
+    {
+      "title": "Multiply and Divide Fractions",
+      "text": "To multiply two fractions, multiply the numerators together and the denominators together: (a/b) * (c/d) = (a*c)/(b*d). To divide by a fraction, multiply by its reciprocal: (a/b) / (c/d) = (a/b) * (d/c). Example: (2/3) * (3/4) = 6/12 = 1/2."
+    },
+    {
+      "title": "Add and Subtract Fractions with Common Denominators",
+      "text": "To add or subtract fractions that already share a denominator, add or subtract the numerators and keep the denominator the same. If denominators differ, first find the least common denominator (LCD), convert each fraction to an equivalent fraction with that denominator, then add or subtract. Example: 1/4 + 1/6, LCD is 12, so 3/12 + 2/12 = 5/12."
+    }
+  ]
+}
