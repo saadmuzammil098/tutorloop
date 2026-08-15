@@ -200,6 +200,29 @@ jobs:
         working-directory: task-7
         run: python -m pytest tests -v
 
+  test-task-8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check task-8 exists on this branch
+        id: check
+        run: echo "exists=$([ -d task-8 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.check.outputs.exists == 'true'
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install deps
+        if: steps.check.outputs.exists == 'true'
+        working-directory: task-8
+        run: pip install -r ../requirements.txt
+      - name: Jailbreak guard and ReAct agent tests
+        if: steps.check.outputs.exists == 'true'
+        # Fast, offline: no live Ollama call, no Terraform/Floci/checkov,
+        # those are exercised live and documented in task-8/README.md.
+        working-directory: task-8
+        run: python -m pytest tests -v
+
   readme-diagrams:
     runs-on: ubuntu-latest
     steps:
