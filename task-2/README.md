@@ -80,6 +80,16 @@ final_answer: Great job calculating that 12 * 8 equals 96! Here's an easy
 next node (paused here if non-empty): ()
 ```
 
+## A note on `tools.py` and `curriculum/`
+
+These are a deliberate copy of Task 1's, not a cross-folder import.
+Task 1 lives on its own unmerged PR branch (the hard PR-workflow rule
+means nothing merges to `main` until the user says so), so Task 2's
+branch, based on `main`, has no access to `task-1/`'s files until that
+PR merges. Keeping each task folder genuinely self-contained turned out
+to be a real requirement of the "never merge" workflow, not just a
+convention.
+
 ## Tests
 
 7 offline pytest tests (`tests/test_graph.py`) using LangGraph's

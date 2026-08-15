@@ -13,12 +13,15 @@ checkpointer, not in-process memory, is what makes the pause durable.
 from __future__ import annotations
 
 import re
-import sys
-from pathlib import Path
 from typing import Literal, Optional, TypedDict
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "task-1"))
-from tools import calculator, curriculum_lookup, practice_problem  # noqa: E402
+# tools.py and curriculum/ are a deliberate copy of Task 1's, not an
+# import across it: Task 1's branch is a separate, unmerged PR (hard
+# PR-workflow rule, nothing merges to main until the user says so), so
+# this branch has no access to task-1/'s files. Once Task 1 merges, a
+# follow-up could de-duplicate this; until then each task folder stays
+# genuinely self-contained, matching the "own code" convention.
+from tools import calculator, curriculum_lookup, practice_problem
 
 import ollama
 from langgraph.graph import END, StateGraph
