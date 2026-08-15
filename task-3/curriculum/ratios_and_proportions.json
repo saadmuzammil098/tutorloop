@@ -1,0 +1,18 @@
+{
+  "chapter": "Ratios and Proportions",
+  "source": "Adapted from OpenStax Prealgebra 2e, Chapter 5 (CC BY 4.0), openstax.org",
+  "sections": [
+    {
+      "title": "Ratios",
+      "text": "A ratio compares two quantities that use the same units. The ratio of a to b is written a/b, a to b, or a:b. Ratios are usually simplified the same way fractions are, by dividing both parts by their greatest common factor."
+    },
+    {
+      "title": "Rates",
+      "text": "A rate compares two quantities with different units, like miles per hour. A unit rate has a denominator of 1, found by dividing the numerator by the denominator. Example: driving 300 miles in 5 hours is a rate of 300 miles / 5 hours, which simplifies to a unit rate of 60 miles per hour."
+    },
+    {
+      "title": "Solve Proportions",
+      "text": "A proportion is an equation stating that two ratios (or rates) are equal, written a/b = c/d. To solve a proportion for an unknown, cross-multiply: a*d = b*c, then solve the resulting equation. Example: x/4 = 15/20. Cross-multiply: 20x = 60, so x = 3."
+    }
+  ]
+}
