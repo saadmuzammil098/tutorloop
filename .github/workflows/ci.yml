@@ -114,6 +114,34 @@ jobs:
         working-directory: task-4
         run: python -m pytest tests -v
 
+  test-task-5:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check task-5 exists on this branch
+        id: check
+        run: echo "exists=$([ -d task-5 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.check.outputs.exists == 'true'
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install deps
+        if: steps.check.outputs.exists == 'true'
+        working-directory: task-5
+        # agent.py imports ollama, tracing.py imports langfuse, both at
+        # module level, but no test calls agent.run() against a live
+        # Ollama server or tracing.traced_run() against a live Langfuse
+        # server, so nothing here needs either running.
+        run: pip install pytest ollama langfuse
+      - name: Agent trajectory and trajectory/tool-call/task-success scoring tests
+        if: steps.check.outputs.exists == 'true'
+        # Fast, offline: chat_fn is scripted in test_agent.py, scoring.py
+        # is pure functions over a scripted trajectory in test_scoring.py.
+        # No live Ollama, no live Langfuse server, in CI.
+        working-directory: task-5
+        run: python -m pytest tests -v
+
   readme-diagrams:
     runs-on: ubuntu-latest
     steps:
