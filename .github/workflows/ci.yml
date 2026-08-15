@@ -142,6 +142,37 @@ jobs:
         working-directory: task-5
         run: python -m pytest tests -v
 
+  test-task-6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check task-6 exists on this branch
+        id: check
+        run: echo "exists=$([ -d task-6 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.check.outputs.exists == 'true'
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install deps
+        if: steps.check.outputs.exists == 'true'
+        working-directory: task-6
+        # agent.py imports ollama, otel_tracing.py/feedback.py/dashboard.py
+        # import opentelemetry/langfuse, all at module level, but no test
+        # calls agent.run() against a live Ollama server or the OTel/
+        # Langfuse-dependent modules against a live stack, so nothing here
+        # needs either running.
+        run: pip install pytest ollama langfuse opentelemetry-sdk opentelemetry-exporter-otlp
+      - name: Agent usage/latency aggregation, cost model, and feedback-mapping tests
+        if: steps.check.outputs.exists == 'true'
+        # Fast, offline: chat_fn is scripted in test_agent.py (returns the
+        # same dict shape Ollama's real usage figures do), cost.py is pure
+        # functions, feedback.py's score-value mapping needs no network.
+        # otel_tracing.py/dashboard.py are inherently networked and are
+        # exercised live instead, see task-6/README.md's "Done when".
+        working-directory: task-6
+        run: python -m pytest tests -v
+
   readme-diagrams:
     runs-on: ubuntu-latest
     steps:
