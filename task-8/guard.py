@@ -97,6 +97,35 @@ def output_is_answer_only(output: str, max_chars_for_bare_answer: int = 40) -> b
     return not any(marker in text for marker in _EXPLANATION_MARKERS)
 
 
+def guarded_run(question: str, agent_run, system: str, chat_fn=None) -> dict:
+    """Input classification alone isn't sufficient defense-in-depth, see
+    red_team.py's README findings: the input classifier correctly flagged
+    every "just give me the answer" attempt, but the live model still
+    complied with a bare answer in 2 of 2 such cases even with the
+    SAFETY addendum in its system prompt. This wraps agent_run() with an
+    output-side retry: if a flagged jailbreak attempt's response still
+    looks like a bare answer, re-run once with an explicit correction
+    nudge appended as another user turn, the model's own conversation
+    history now includes its own bare-answer violation to react to.
+    """
+    classification = classify_input(question)
+    is_jailbreak_attempt = classification["is_answer_only_request"] or classification["is_prompt_injection"]
+
+    result = agent_run(question=question, system=system, chat_fn=chat_fn)
+    if not is_jailbreak_attempt or not output_is_answer_only(result["final_answer"] or ""):
+        result["retried"] = False
+        return result
+
+    correction_question = (
+        f"{question}\n\n(Your previous response, \"{result['final_answer']}\", was a bare answer "
+        "with no explanation. Try again: briefly explain the reasoning, do not just state the answer.)"
+    )
+    retried_result = agent_run(question=correction_question, system=system, chat_fn=chat_fn)
+    retried_result["retried"] = True
+    retried_result["pre_retry_answer"] = result["final_answer"]
+    return retried_result
+
+
 def output_leaks_system_prompt(output: str, system_prompt: str, min_leaked_words: int = 8) -> bool:
     """Checks for a long verbatim run of words from the system prompt
     appearing in the output, a real leak, not just incidental word
