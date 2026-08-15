@@ -82,6 +82,38 @@ jobs:
         working-directory: task-3
         run: python -m pytest tests -v
 
+  test-task-4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check task-4 exists on this branch
+        id: check
+        run: echo "exists=$([ -d task-4 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.check.outputs.exists == 'true'
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install deps
+        if: steps.check.outputs.exists == 'true'
+        working-directory: task-4
+        # tutor.py imports ollama at module level (used only as the
+        # default chat_fn, tests always inject their own), and rag.py also
+        # imports ollama at module level for its embedding calls, but
+        # chromadb is imported lazily inside rag.py's functions and no
+        # test actually calls build_index()/retrieve() against a live
+        # Ollama server, so nothing here needs a running Ollama or a
+        # built Chroma index.
+        run: pip install pytest ollama
+      - name: Memory, RAG loading, and grounded+personalized tutor tests
+        if: steps.check.outputs.exists == 'true'
+        # Fast, offline: SQLite memory uses a tmp_path fixture, RAG
+        # loading tests only exercise load_sections() (no embedding
+        # calls), tutor tests inject chat_fn/retrieve_fn. No live Ollama
+        # server and no Chroma index needed in CI.
+        working-directory: task-4
+        run: python -m pytest tests -v
+
   readme-diagrams:
     runs-on: ubuntu-latest
     steps:
