@@ -173,6 +173,33 @@ jobs:
         working-directory: task-6
         run: python -m pytest tests -v
 
+  test-task-7:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check task-7 exists on this branch
+        id: check
+        run: echo "exists=$([ -d task-7 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.check.outputs.exists == 'true'
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install deps
+        if: steps.check.outputs.exists == 'true'
+        working-directory: task-7
+        # agent.py and online_eval.py import ollama at module level, but
+        # no test calls agent.run() or online_eval.judge_score() against
+        # a live Ollama server, all scripted via chat_fn, so nothing here
+        # needs it running.
+        run: pip install pytest ollama
+      - name: Online eval, feedback-to-dataset, and shadow-test decision tests
+        if: steps.check.outputs.exists == 'true'
+        # Fast, offline: chat_fn/judge chat_fn are both scripted, dataset
+        # writes go through tmp_path. No live Ollama server in CI.
+        working-directory: task-7
+        run: python -m pytest tests -v
+
   readme-diagrams:
     runs-on: ubuntu-latest
     steps:
